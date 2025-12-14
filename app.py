@@ -12,11 +12,11 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 
-# Import custom modules (Assuming these exist in your directory)
+# Import custom modules
 import backend
 import training_utils
 
-# Disable SSL warnings for university sites
+# Disable SSL warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # --- PAGE CONFIG ---
@@ -27,10 +27,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- PROFESSIONAL GLASSMORPHISM THEME ---
+# --- THEME CSS ---
+# Note: kept flush left to avoid markdown code-block triggering
 st.markdown("""
 <style>
-    /* FONTS */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 
@@ -49,13 +49,11 @@ st.markdown("""
         color: var(--text-main);
     }
 
-    /* FULL BLURRED BACKGROUND */
     .stApp {
         background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
         background-attachment: fixed;
     }
     
-    /* SIDEBAR */
     section[data-testid="stSidebar"] {
         background-color: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
@@ -66,7 +64,6 @@ st.markdown("""
         color: var(--text-main) !important;
     }
 
-    /* GLASS CARDS - ROBUST */
     .glass-card {
         background: var(--glass-bg);
         backdrop-filter: blur(12px);
@@ -79,7 +76,6 @@ st.markdown("""
         height: 100%;
     }
 
-    /* TYPOGRAPHY */
     .section-title {
         font-size: 0.75rem;
         text-transform: uppercase;
@@ -89,7 +85,6 @@ st.markdown("""
         margin-bottom: 1rem;
     }
 
-    /* BUTTONS */
     div.stButton > button {
         background-color: var(--primary);
         color: white !important;
@@ -110,7 +105,6 @@ st.markdown("""
         box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
     }
 
-    /* PREDICTION BOX */
     .prediction-display {
         background: rgba(255, 255, 255, 0.5);
         border: 1px solid rgba(255, 255, 255, 0.6);
@@ -140,12 +134,10 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* IMAGES */
     img {
         border-radius: 8px;
     }
     
-    /* GRID FOR IMAGES */
     .visual-grid {
         display: flex;
         gap: 20px;
@@ -172,18 +164,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- HELPER: ROBUST RETRIEVAL (FIXED) ---
+# --- HELPER FUNCTIONS ---
 def fetch_live_captcha(url="https://imsnsit.org/imsnsit/captcha/captcha.php"):
-    """
-    Robust fetcher that handles SSL verification issues common with university portals.
-    Replaces the need for the external backend fetcher class.
-    """
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'Referer': 'https://imsnsit.org/',
     }
     try:
-        # verify=False is critical for some university subdomains
         response = requests.get(url, headers=headers, verify=False, timeout=10)
         if response.status_code == 200:
             return response.content, None
@@ -192,7 +179,6 @@ def fetch_live_captcha(url="https://imsnsit.org/imsnsit/captcha/captcha.php"):
     except Exception as e:
         return None, str(e)
 
-# --- HELPER: IMAGE TO HTML ---
 def get_image_html(img_array):
     _, buffer = cv2.imencode('.png', img_array)
     b64 = base64.b64encode(buffer).decode('utf-8')
@@ -217,19 +203,19 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("""
-        <div style="text-align: center; font-size: 0.8rem; color: #64748B;">
-            Made with <span style="color: #E25555;">&hearts;</span> by <span style="font-weight: 600;">Aditya Mishra</span>
-        </div>
-    """, unsafe_allow_html=True)
+<div style="text-align: center; font-size: 0.8rem; color: #64748B;">
+    Made with <span style="color: #E25555;">&hearts;</span> by <span style="font-weight: 600;">Aditya Mishra</span>
+</div>
+""", unsafe_allow_html=True)
 
-# --- INIT SESSION ---
+# --- INIT MODEL ---
 if 'model' not in st.session_state or st.session_state.model is None:
     st.session_state.model = backend.load_pretrained_model()
 
 if 'dataset_uploaded' not in st.session_state:
     st.session_state.dataset_uploaded = False
 
-# --- UTILS ---
+# --- LOAD DATASET FUNCTION ---
 def load_uploaded_dataset(uploaded_file):
     with zipfile.ZipFile(uploaded_file, 'r') as z:
         z.extractall("temp_dataset")
@@ -270,18 +256,17 @@ def save_and_update_model(model):
 if mode == "Live Dashboard":
     
     st.markdown("""
-    <div style="margin-bottom: 2rem;">
-        <h1 style="margin-bottom: 0.5rem; font-weight: 700;">Live Inference Dashboard</h1>
-        <p style="color: #64748B;">Real-time computer vision pipeline for security analysis.</p>
-    </div>
-    """, unsafe_allow_html=True)
+<div style="margin-bottom: 2rem;">
+    <h1 style="margin-bottom: 0.5rem; font-weight: 700;">Live Inference Dashboard</h1>
+    <p style="color: #64748B;">Real-time computer vision pipeline for security analysis.</p>
+</div>
+""", unsafe_allow_html=True)
 
     # --- LAYOUT ---
     col_main, col_sidebar = st.columns([7, 3], gap="large")
     
     # === LEFT COLUMN ===
     with col_main:
-        # System Status
         status_content = ""
         if st.session_state.model:
             status_content = '<span style="color: #166534; font-weight: 600;">● Online</span>: Model loaded and ready for inference.'
@@ -289,20 +274,19 @@ if mode == "Live Dashboard":
             status_content = '<span style="color: #DC2626; font-weight: 600;">● Offline</span>: No model detected.'
             
         st.markdown(f"""
-        <div class="glass-card" style="padding: 1.5rem; display: flex; align-items: center; min-height: 80px;">
-            <div>
-                <span class="section-title" style="margin-right: 15px; display: block; margin-bottom: 5px;">System Status</span>
-                <span style="font-size: 1rem; color: #1E293B;">{status_content}</span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+<div class="glass-card" style="padding: 1.5rem; display: flex; align-items: center; min-height: 80px;">
+    <div>
+        <span class="section-title" style="margin-right: 15px; display: block; margin-bottom: 5px;">System Status</span>
+        <span style="font-size: 1rem; color: #1E293B;">{status_content}</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
         
         visual_placeholder = st.empty()
 
     # === RIGHT COLUMN ===
     with col_sidebar:
         st.markdown('<div style="height: 0px;"></div>', unsafe_allow_html=True)
-        # Fetch Button
         if st.button("Fetch Captcha", use_container_width=True):
             st.session_state.trigger_fetch = True
         else:
@@ -316,24 +300,17 @@ if mode == "Live Dashboard":
         with visual_placeholder.container():
              with st.spinner("Processing..."):
                 time.sleep(0.1) 
-                # Use robust local fetcher instead of backend.CaptchaFetcher
                 img_bytes, error = fetch_live_captcha()
                 time.sleep(0.5) 
 
         if error:
             st.error(f"Connection Error: {error}")
         else:
-            # Decode image
             nparr = np.frombuffer(img_bytes, np.uint8)
             original_img = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
-            
-            # Preprocess
             _, cleaned = backend.preprocess_captcha_v2(io.BytesIO(img_bytes))
-            
-            # Segment
             digits = backend.segment_characters_robust(cleaned)
             
-            # Generate HTML for Images
             src_html = get_image_html(original_img)
             bin_html = get_image_html(cleaned)
             
@@ -342,31 +319,29 @@ if mode == "Live Dashboard":
                 for d in digits:
                     digits_divs += f'<div class="digit-item"><img src="{get_image_html(d)}" style="width: 100%; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 4px rgba(0,0,0,0.05);"></div>'
             
-            # --- RENDER VISUALS (CRITICAL: unsafe_allow_html=True) ---
+            # --- RENDER VISUALS ---
             with visual_placeholder.container():
+                # IMPORTANT: HTML string starts flush left to prevent Markdown code block formatting
                 st.markdown(f"""
-                <div class="glass-card">
-                    <p class="section-title">Visual Analysis</p>
-                    
-                    <div class="visual-grid">
-                        <div class="visual-item">
-                            <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 8px; font-weight: 600; text-transform: uppercase;">Raw Input</div>
-                            <img src="{src_html}" style="width: 100%; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
-                        </div>
-                        <div class="visual-item">
-                            <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 8px; font-weight: 600; text-transform: uppercase;">Binary Mask</div>
-                            <img src="{bin_html}" style="width: 100%; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
-                        </div>
-                    </div>
-                    
-                    <div style="border-top: 1px solid rgba(0,0,0,0.05); margin: 24px 0;"></div>
-                    
-                    <p class="section-title" style="margin-bottom: 15px;">Segmentation Stream</p>
-                    <div class="digit-grid">
-                        {digits_divs}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+<div class="glass-card">
+    <p class="section-title">Visual Analysis</p>
+    <div class="visual-grid">
+        <div class="visual-item">
+            <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 8px; font-weight: 600; text-transform: uppercase;">Raw Input</div>
+            <img src="{src_html}" style="width: 100%; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+        </div>
+        <div class="visual-item">
+            <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 8px; font-weight: 600; text-transform: uppercase;">Binary Mask</div>
+            <img src="{bin_html}" style="width: 100%; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
+        </div>
+    </div>
+    <div style="border-top: 1px solid rgba(0,0,0,0.05); margin: 24px 0;"></div>
+    <p class="section-title" style="margin-bottom: 15px;">Segmentation Stream</p>
+    <div class="digit-grid">
+        {digits_divs}
+    </div>
+</div>
+""", unsafe_allow_html=True)
             
             if len(digits) == 5 and st.session_state.model:
                 prediction = backend.predict_sequence(st.session_state.model, digits)
@@ -374,31 +349,29 @@ if mode == "Live Dashboard":
             else:
                 st.session_state.last_prediction = None
 
-    # --- DISPLAY RESULT ---
     if st.session_state.get('trigger_fetch'):
         with result_placeholder.container():
             st.markdown('<div style="height: 24px;"></div>', unsafe_allow_html=True)
             
             if st.session_state.get('last_prediction'):
                 st.markdown(f"""
-                <div class="glass-card">
-                    <p class="section-title">Inference Result</p>
-                    <div class="prediction-display">
-                        <div class="prediction-text">{st.session_state.last_prediction}</div>
-                        <div class="confidence-tag">High Confidence</div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+<div class="glass-card">
+    <p class="section-title">Inference Result</p>
+    <div class="prediction-display">
+        <div class="prediction-text">{st.session_state.last_prediction}</div>
+        <div class="confidence-tag">High Confidence</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
             elif 'last_prediction' in st.session_state and st.session_state.last_prediction is None:
                  st.warning("Segmentation Failed")
     else:
-        # Empty State
         with visual_placeholder.container():
              st.markdown("""
-             <div class="glass-card" style="height: 300px; display: flex; align-items: center; justify-content: center; color: #94A3B8;">
-                <div style="opacity: 0;">Spacer</div>
-             </div>
-             """, unsafe_allow_html=True)
+<div class="glass-card" style="height: 300px; display: flex; align-items: center; justify-content: center; color: #94A3B8;">
+    <div style="opacity: 0;">Spacer</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # =========================================================
@@ -406,19 +379,18 @@ if mode == "Live Dashboard":
 # =========================================================
 elif mode == "Training Studio":
     st.markdown("""
-    <div style="margin-bottom: 2rem;">
-        <h1 style="margin-bottom: 0.5rem; font-weight: 700;">Training Studio</h1>
-        <p style="color: #64748B;">Design, train, and optimize CNN architectures.</p>
-    </div>
-    """, unsafe_allow_html=True)
+<div style="margin-bottom: 2rem;">
+    <h1 style="margin-bottom: 0.5rem; font-weight: 700;">Training Studio</h1>
+    <p style="color: #64748B;">Design, train, and optimize CNN architectures.</p>
+</div>
+""", unsafe_allow_html=True)
     
-    # 1. DATASET
     st.markdown("""
-    <div class="glass-card" style="padding-bottom: 10px; margin-bottom: 20px;">
-        <p class="section-title" style="margin-bottom: 5px;">Data Ingestion</p>
-        <p style="font-size: 0.9rem; color: #64748B;">Upload your labeled dataset to begin.</p>
-    </div>
-    """, unsafe_allow_html=True)
+<div class="glass-card" style="padding-bottom: 10px; margin-bottom: 20px;">
+    <p class="section-title" style="margin-bottom: 5px;">Data Ingestion</p>
+    <p style="font-size: 0.9rem; color: #64748B;">Upload your labeled dataset to begin.</p>
+</div>
+""", unsafe_allow_html=True)
 
     col_upload, col_stats = st.columns([2, 1])
     
@@ -485,13 +457,13 @@ elif mode == "Training Studio":
             
             with col_center:
                 st.markdown("""
-                <div class="glass-card" style="margin-bottom: 24px;">
-                    <div style="text-align: center;">
-                        <h3 style="color: #1E293B; margin-bottom: 5px;">Auto-Tuning Engine</h3>
-                        <p style="color: #64748B; font-size: 0.9rem;">Configure search parameters to find the best model.</p>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+<div class="glass-card" style="margin-bottom: 24px;">
+    <div style="text-align: center;">
+        <h3 style="color: #1E293B; margin-bottom: 5px;">Auto-Tuning Engine</h3>
+        <p style="color: #64748B; font-size: 0.9rem;">Configure search parameters to find the best model.</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
                 
                 c_opt1, c_opt2 = st.columns(2)
                 with c_opt1:
@@ -560,10 +532,10 @@ elif mode == "Training Studio":
                             _, c_res, _ = st.columns([1, 2, 1])
                             with c_res:
                                 st.markdown("""
-                                <div class="glass-card" style="background-color: rgba(220, 252, 231, 0.6); border: 1px solid #86EFAC;">
-                                    <h4 style="color: #166534; text-align: center; margin: 0;">🎉 Optimization Complete & Model Saved!</h4>
-                                </div>
-                                """, unsafe_allow_html=True)
+<div class="glass-card" style="background-color: rgba(220, 252, 231, 0.6); border: 1px solid #86EFAC;">
+    <h4 style="color: #166534; text-align: center; margin: 0;">🎉 Optimization Complete & Model Saved!</h4>
+</div>
+""", unsafe_allow_html=True)
                             st.balloons()
                             shutil.rmtree('my_dir')
                 except:

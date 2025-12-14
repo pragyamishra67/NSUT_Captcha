@@ -43,11 +43,12 @@ left, right = st.columns([7, 3], gap="large")
 
 
 # =========================================================
-# LEFT COLUMN
+# LEFT COLUMN — STATUS + VISUALS
 # =========================================================
 with left:
 
     st.subheader("System Status")
+
     if st.session_state.model:
         st.success("Model loaded and ready")
     else:
@@ -57,9 +58,10 @@ with left:
 
 
 # =========================================================
-# RIGHT COLUMN
+# RIGHT COLUMN — ACTION + RESULT
 # =========================================================
 with right:
+
     if st.button("Fetch Captcha", use_container_width=True):
         st.session_state.fetch = True
 
@@ -81,19 +83,20 @@ if st.session_state.fetch:
         st.session_state.fetch = False
 
     else:
-        # Decode image
+        # -------- SAFE IMAGE DECODE --------
         nparr = np.frombuffer(img_bytes, np.uint8)
         original = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
 
         _, cleaned = backend.preprocess_captcha_v2(original)
         digits = backend.segment_characters_robust(cleaned)
 
-        # ================= VISUALS =================
+        # -------- VISUALS --------
         with visual_placeholder.container():
 
             st.subheader("Visual Analysis")
 
             c1, c2 = st.columns(2)
+
             with c1:
                 st.caption("Raw Input")
                 st.image(original, use_container_width=True)
@@ -106,13 +109,13 @@ if st.session_state.fetch:
             st.caption("Segmentation Stream")
 
             if len(digits) == 5:
-                dcols = st.columns(5)
+                cols = st.columns(5)
                 for i, d in enumerate(digits):
-                    dcols[i].image(d, use_container_width=True)
+                    cols[i].image(d, use_container_width=True)
             else:
                 st.warning("Segmentation failed")
 
-        # ================= PREDICTION =================
+        # -------- PREDICTION --------
         if len(digits) == 5 and st.session_state.model:
             st.session_state.prediction = backend.predict_sequence(
                 st.session_state.model, digits
@@ -124,9 +127,10 @@ if st.session_state.fetch:
 
 
 # =========================================================
-# RESULT
+# RESULT PANEL
 # =========================================================
 with result_placeholder.container():
+
     if st.session_state.prediction:
         st.subheader("Inference Result")
         st.code(st.session_state.prediction)

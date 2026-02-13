@@ -17,12 +17,15 @@ def run():
         TUNER_PROJECT_NAME,
     )
     from nsut_captcha.core.vision import (
-        predict_sequence,
         preprocess_captcha_v2,
         segment_characters_robust,
     )
     from nsut_captcha.services import training_utils
     from nsut_captcha.services.dataset_service import load_uploaded_dataset
+    from captcha_predictor.services.predict_service import predict_from_digits
+    from captcha_predictor.utils.logging import configure_logging
+
+    configure_logging()
     
     
     # =========================================================
@@ -121,12 +124,11 @@ def run():
                     cols = st.columns(5)
                     for i, d in enumerate(digits):
                         cols[i].image(d, caption=f"Digit {i + 1}")
-    
+
                     if st.session_state.model:
-                        prediction = predict_sequence(
-                            st.session_state.model, digits
-                        )
-                        st.success(f"Prediction: {prediction}")
+                        result = predict_from_digits(st.session_state.model, digits)
+                        st.success(f"Prediction: {result['prediction']}")
+                        st.caption(f"Inference latency: {result['latency_ms']:.2f} ms")
                     else:
                         st.error("Model not loaded.")
                 else:

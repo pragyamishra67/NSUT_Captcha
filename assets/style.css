@@ -1,64 +1,389 @@
+/* ============================================================
+   CAPTCHArd — Professional UI Theme
+   ============================================================ */
+
 /* --- FONTS --- */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* --- GLOBAL RESET --- */
+/* --- GLOBAL --- */
 .stApp {
-    background-color: #F0F2F5; /* Light Grey Background */
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #F3F4F6;
 }
 
-/* --- SIDEBAR --- */
-section[data-testid="stSidebar"] {
-    background-color: #FFFFFF;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+/* --- PAGE TITLES --- */
+.page-title {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    margin-bottom: 0.15rem !important;
+    letter-spacing: -0.025em;
 }
 
-div[data-testid="stSidebarNav"] {
-    padding-top: 20px;
+.page-subtitle {
+    font-size: 0.95rem;
+    color: #6B7280;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
-/* --- HEADERS --- */
+/* --- SECTION HEADERS --- */
 h1, h2, h3 {
-    color: #202124 !important;
-    font-weight: 500 !important;
+    color: #111827 !important;
+    font-weight: 600 !important;
 }
 
-/* --- CARDS --- */
-div.stContainer {
-    background-color: #FFFFFF;
-    padding: 2rem;
+h3 {
+    font-size: 1.2rem !important;
+    margin-top: 1.5rem !important;
+}
+
+h4 {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+}
+
+section[data-testid="stSidebar"] .stMarkdown,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] h4 {
+    color: #E2E8F0 !important;
+}
+
+section[data-testid="stSidebar"] small {
+    color: #94A3B8 !important;
+}
+
+section[data-testid="stSidebar"] hr {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* --- Sidebar Cards --- */
+.sidebar-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin: 0.5rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-card-success {
+    border-left: 3px solid #34A853;
+}
+
+.sidebar-card-warning {
+    border-left: 3px solid #FBBC04;
+}
+
+.sidebar-card-header {
+    font-weight: 600;
+    font-size: 0.82rem;
+    margin-bottom: 0.5rem;
+    color: #F1F5F9 !important;
+}
+
+.sidebar-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    padding: 0.2rem 0;
+    color: #CBD5E1;
+}
+
+.sidebar-card-body {
+    font-size: 0.78rem;
+    color: #94A3B8;
+    line-height: 1.5;
+}
+
+.stat-badge {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60A5FA !important;
+    padding: 0.1rem 0.55rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.72rem;
+}
+
+/* --- Sidebar Radio Buttons --- */
+section[data-testid="stSidebar"] div[role="radiogroup"] {
+    gap: 6px;
+}
+
+section[data-testid="stSidebar"] div[role="radiogroup"] label {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px !important;
+    padding: 0.55rem 1rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.15s ease;
+}
+
+section[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+section[data-testid="stSidebar"] div[role="radiogroup"] label[data-checked="true"] {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* ============================================================
+   METRIC CARDS
+   ============================================================ */
+
+.metric-card {
+    background: #FFFFFF;
     border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    margin-bottom: 2rem;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid #E5E7EB;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* --- BUTTONS --- */
-div.stButton > button {
-    background-color: #1A73E8;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 500;
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 100%;
-}
-
-div.stButton > button:hover {
-    background-color: #1557B0;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+.metric-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transform: translateY(-1px);
 }
 
-/* --- STATUS BOXES --- */
-div[data-baseweb="notification"] {
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+.metric-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
 }
 
-/* --- RADIO BUTTONS --- */
-/* Forces alignment and spacing in sidebar */
-div[role="radiogroup"] {
-    gap: 12px;
+.metric-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+/* ============================================================
+   CONFIDENCE BARS (Feature 1)
+   ============================================================ */
+
+.confidence-container {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    padding: 0.75rem 0 1rem;
+}
+
+.digit-conf-card {
+    flex: 1;
+    max-width: 110px;
+    text-align: center;
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 0.85rem 0.5rem 0.65rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    border: 1px solid #E5E7EB;
+    transition: transform 0.15s ease;
+}
+
+.digit-conf-card:hover {
+    transform: translateY(-2px);
+}
+
+.digit-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.4rem;
+    line-height: 1;
+}
+
+.conf-bar-bg {
+    width: 100%;
+    height: 5px;
+    background: #F3F4F6;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.35rem;
+}
+
+.conf-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.conf-pct {
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+div.stButton > button {
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    transition: all 0.15s ease;
+    border: none;
+    font-family: 'Inter', sans-serif;
+}
+
+div.stButton > button[kind="primary"],
+div.stButton > button[data-testid="stBaseButton-primary"] {
+    background: linear-gradient(135deg, #2563EB, #1D4ED8);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+div.stButton > button[kind="primary"]:hover,
+div.stButton > button[data-testid="stBaseButton-primary"]:hover {
+    background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    transform: translateY(-1px);
+}
+
+div.stButton > button:not([kind="primary"]):not([data-testid="stBaseButton-primary"]) {
+    background: #FFFFFF;
+    color: #374151;
+    border: 1px solid #D1D5DB;
+}
+
+div.stButton > button:not([kind="primary"]):not([data-testid="stBaseButton-primary"]):hover {
+    background: #F9FAFB;
+    border-color: #9CA3AF;
+}
+
+/* ============================================================
+   STATUS ALERTS
+   ============================================================ */
+
+div[data-baseweb="notification"] {
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+
+button[data-baseweb="tab"] {
+    font-weight: 500;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ============================================================
+   EXPANDER
+   ============================================================ */
+
+details[data-testid="stExpander"] {
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    background: #FAFBFC;
+}
+
+details[data-testid="stExpander"] summary {
+    font-weight: 500;
+}
+
+/* ============================================================
+   DATA FRAMES / TABLES
+   ============================================================ */
+
+.stDataFrame {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================
+   FILE UPLOADER
+   ============================================================ */
+
+section[data-testid="stFileUploader"] {
+    border-radius: 10px;
+}
+
+section[data-testid="stFileUploader"] div[data-testid="stFileUploaderDropzone"] {
+    border-radius: 10px;
+    border: 2px dashed #D1D5DB;
+    background: #FAFBFC;
+    transition: border-color 0.15s ease;
+}
+
+section[data-testid="stFileUploader"] div[data-testid="stFileUploaderDropzone"]:hover {
+    border-color: #2563EB;
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+
+div[data-testid="stSlider"] label {
+    font-weight: 500;
+}
+
+/* ============================================================
+   IMAGES (pipeline stage cards)
+   ============================================================ */
+
+div[data-testid="stImage"] {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ============================================================
+   PLOTLY CHARTS
+   ============================================================ */
+
+.stPlotlyChart {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* ============================================================
+   SCROLLBAR (main area)
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+
+hr {
+    border-color: #E5E7EB !important;
 }

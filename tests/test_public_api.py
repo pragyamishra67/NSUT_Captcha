@@ -1,5 +1,10 @@
+import sys
+from pathlib import Path
 import unittest
 from unittest.mock import patch
+
+# Ensure package root is on sys.path when running this file directly
+sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 import captcha_predictor
 

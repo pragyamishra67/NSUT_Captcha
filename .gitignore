@@ -8,6 +8,8 @@ __pycache__/
 
 *.ipynb
 *captcha*
+!nsut_captcha/
+!nsut_captcha/**
 *preprocess*
 captcha_download.ipynb
 captcha_read.py

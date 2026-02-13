@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "captcha_predictor"
+version = "0.1.0"
+description = "CAPTCHA prediction package for NSUT-style 5-digit captchas."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "NSUT Captcha Contributors" }
+]
+dependencies = [
+  "beautifulsoup4",
+  "keras-tuner",
+  "matplotlib",
+  "numpy",
+  "opencv-python-headless",
+  "plotly",
+  "requests",
+  "scikit-learn",
+  "seaborn",
+  "streamlit",
+  "tensorflow",
+  "tqdm",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["captcha_predictor*"]
+

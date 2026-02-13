@@ -8,6 +8,12 @@ __pycache__/
 
 *.ipynb
 *captcha*
+!nsut_captcha/
+!nsut_captcha/**
+!captcha_predictor/
+!captcha_predictor/**
+captcha_predictor/**/__pycache__/
+captcha_predictor/**/*.pyc
 *preprocess*
 captcha_download.ipynb
 captcha_read.py
@@ -21,4 +27,11 @@ model_train.py
 *bg*
 *try*
 *test*
+!tests/
+!tests/**
+tests/**/__pycache__/
+tests/**/*.pyc
+!docs/
+!docs/**
 !final_captcha_model.h5
+*.h5

@@ -1,10 +1,15 @@
 """High-level public API for CAPTCHA prediction."""
 
 import io
+import asyncio
 from pathlib import Path
 from typing import BinaryIO, Optional, Union
 
 from captcha_predictor.adapters.model_loader import load_pretrained_model
+from captcha_predictor.services.predict_service import (
+    predict_from_digits,
+    predict_from_image,
+)
 
 
 ImageInput = Union[str, Path, bytes, BinaryIO]
@@ -65,6 +70,34 @@ def predict_captcha(
     if active_model is None:
         return "Error: Model not loaded"
 
-    digit_images = _extract_digits(image)
-    return _predict_from_digits(active_model, digit_images)
+    result = predict_from_image(image, active_model)
+    return result["prediction"]
+
+
+async def predict_captcha_endpoint(
+    image: ImageInput,
+    model=None,
+    model_path: Optional[Union[str, Path]] = None,
+):
+    """
+    Async API endpoint-style function returning prediction + latency.
+
+    Returns:
+        dict: {"prediction": str, "latency_ms": float}
+    """
+    active_model = model if model is not None else load_model(model_path=model_path)
+    if active_model is None:
+        return {"prediction": "Error: Model not loaded", "latency_ms": 0.0}
+
+    return await asyncio.to_thread(predict_from_image, image, active_model)
+
+
+async def segment_captcha_endpoint(image: ImageInput):
+    """Async API endpoint-style function for segmentation."""
+    return await asyncio.to_thread(_extract_digits, image)
+
+
+async def predict_from_digits_endpoint(model, digit_images):
+    """Async API endpoint-style function for pre-segmented digits."""
+    return await asyncio.to_thread(predict_from_digits, model, digit_images)
 

@@ -7,6 +7,8 @@ from unittest.mock import patch
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 import captcha_predictor
+from captcha_predictor.services.inference_service import InferenceService
+from captcha_predictor.utils.logging import setup_logging
 
 
 class PublicApiTests(unittest.TestCase):
@@ -70,4 +72,43 @@ class AsyncApiTests(unittest.IsolatedAsyncioTestCase):
         result = await segment_captcha_endpoint("dummy.png")
         self.assertEqual(result, ["d1", "d2", "d3", "d4", "d5"])
         extract_digits_mock.assert_called_once_with("dummy.png")
+
+
+class CaptchaFetchingTests(unittest.TestCase):
+    def test_fetch_captcha_dataset(self):
+        dataset = fetch_captcha_dataset()
+        self.assertIsNotNone(dataset)
+        self.assertGreater(len(dataset), 0)
+
+
+class ModelTrainingTests(unittest.TestCase):
+    def test_train_model(self):
+        result = train_model()
+        self.assertTrue(result)
+
+
+class PredictionTests(unittest.TestCase):
+    def test_predict_captcha(self):
+        prediction = predict_captcha("test_image.png")
+        self.assertIsInstance(prediction, str)
+        self.assertGreater(len(prediction), 0)
+
+
+class InferenceServiceTests(unittest.TestCase):
+    def test_inference_service(self):
+        service = InferenceService()
+        result = service.infer("test_image.png")
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, str)
+
+
+class LoggingTests(unittest.TestCase):
+    def test_logging_setup(self):
+        logger = setup_logging()
+        self.assertIsNotNone(logger)
+        self.assertTrue(logger.hasHandlers())
+
+
+if __name__ == "__main__":
+    unittest.main()
 

@@ -35,3 +35,4 @@ tests/**/*.pyc
 !docs/**
 !final_captcha_model.h5
 *.h5
+env/**
